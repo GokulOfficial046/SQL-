@@ -1,0 +1,27 @@
+-- 1. Create Database
+CREATE DATABASE schoolDB;
+
+-- 2. Use Database
+USE schoolDB;
+
+-- 3. Create Table
+CREATE TABLE students (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT,
+    grade CHAR(1)
+);
+
+-- 4. Insert 5 Records
+INSERT INTO students (id, name, age, grade) VALUES
+(1, 'John', 15, 'A'),
+(2, 'Emma', 14, 'B'),
+(3, 'David', 16, 'A'),
+(4, 'Sophia', 15, 'C'),
+(5, 'Michael', 14, 'B');
+
+-- 5. View Data
+SELECT * FROM students;
+
+-- 6. Drop Database
+DROP DATABASE schoolDB;

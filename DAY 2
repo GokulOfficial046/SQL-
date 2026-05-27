@@ -1,0 +1,45 @@
+-- 1. Create Database
+CREATE DATABASE companyDB;
+
+-- 2. Use Database
+USE companyDB;
+
+-- 3. Create employees table with constraints
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    salary DECIMAL(10,2) DEFAULT 30000
+);
+
+-- 4. Insert 5 employee records
+INSERT INTO employees (id, name, email, salary) VALUES
+(1, 'John', 'john@gmail.com', 45000),
+(2, 'Alice', 'alice@gmail.com', 50000),
+(3, 'David', 'david@gmail.com', 30000),
+(4, 'Emma', 'emma@gmail.com', 35000),
+(5, 'Chris', 'chris@gmail.com', 40000);
+
+-- View Data
+SELECT * FROM employees;
+
+-- 5. Try inserting duplicate email (This will show ERROR)
+INSERT INTO employees (id, name, email, salary)
+VALUES (6, 'Sam', 'john@gmail.com', 32000);
+
+-- 6. Drop the table
+DROP TABLE employees;
+
+-- Recreate table with CHECK constraint
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    salary DECIMAL(10,2) DEFAULT 30000 CHECK (salary > 0)
+);
+
+-- Test CHECK constraint
+INSERT INTO employees (id, name, email, salary)
+VALUES (1, 'Test', 'test@gmail.com', -5000);
+
+-- Above query will show ERROR because salary must be > 0

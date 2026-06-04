@@ -1,0 +1,45 @@
+-- 1. Create table events
+CREATE TABLE events (
+    id INT PRIMARY KEY,
+    event_name VARCHAR(100),
+    event_date DATE
+);
+
+-- 2. Insert events with different dates
+INSERT INTO events (id, event_name, event_date)
+VALUES
+(1, 'Annual Meeting', '2026-06-10'),
+(2, 'Sports Day', '2026-07-15'),
+(3, 'Tech Fest', '2026-08-20'),
+(4, 'Cultural Event', '2026-09-05'),
+(5, 'Graduation Day', '2026-10-12');
+
+-- View data
+SELECT * FROM events;
+
+-- 3. Display current date and time
+SELECT NOW() AS Current_Date_Time;
+
+-- 4. Format event_date using DATE_FORMAT()
+SELECT
+    id,
+    event_name,
+    DATE_FORMAT(event_date, '%d-%m-%Y') AS Formatted_Date
+FROM events;
+
+-- 5. Extract YEAR and MONTH from event_date
+SELECT
+    id,
+    event_name,
+    YEAR(event_date) AS Event_Year,
+    MONTH(event_date) AS Event_Month
+FROM events;
+
+-- 6. Combine event_name and event_date using CONCAT()
+SELECT
+    CONCAT(
+        event_name,
+        ' - ',
+        DATE_FORMAT(event_date, '%d-%m-%Y')
+    ) AS Event_Details
+FROM events;

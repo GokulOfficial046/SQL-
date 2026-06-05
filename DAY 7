@@ -1,0 +1,106 @@
+CREATE DATABASE companyDB;
+USE companyDB;
+
+-- Customers Table
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(50),
+    city VARCHAR(50)
+);
+
+-- Orders Table
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    product_name VARCHAR(50),
+    amount DECIMAL(10,2),
+    FOREIGN KEY (customer_id)
+    REFERENCES customers(customer_id)
+);
+
+-- Insert Customers
+INSERT INTO customers VALUES
+(1,'Gokul','Chennai'),
+(2,'Prem','Coimbatore'),
+(3,'Kulla','Madurai'),
+(4,'Mark','Salem'),
+(5,'Priya','Trichy');
+
+-- Insert Orders
+INSERT INTO orders VALUES
+(101,1,'Laptop',55000),
+(102,2,'Mobile',25000),
+(103,1,'Keyboard',1500),
+(104,3,'Monitor',12000),
+(105,4,'Mouse',800);
+
+-- INNER JOIN
+SELECT c.customer_name,
+       o.order_id,
+       o.product_name,
+       o.amount
+FROM customers c
+INNER JOIN orders o
+ON c.customer_id = o.customer_id;
+
+-- LEFT JOIN
+SELECT c.customer_name,
+       o.order_id,
+       o.product_name
+FROM customers c
+LEFT JOIN orders o
+ON c.customer_id = o.customer_id;
+
+-- 2NF Example
+CREATE TABLE Customers_2NF (
+    CustomerID INT PRIMARY KEY,
+    CustomerName VARCHAR(50)
+);
+
+CREATE TABLE Orders_2NF (
+    OrderID INT,
+    CustomerID INT,
+    ProductName VARCHAR(50),
+    PRIMARY KEY (OrderID, ProductName),
+    FOREIGN KEY (CustomerID)
+    REFERENCES Customers_2NF(CustomerID)
+);
+
+INSERT INTO Customers_2NF VALUES
+(1,'Gokul'),
+(2,'Prem');
+
+INSERT INTO Orders_2NF VALUES
+(101,1,'Laptop'),
+(101,1,'Mouse'),
+(102,2,'Mobile');
+
+-- 3NF Example
+CREATE TABLE Departments (
+    DeptID VARCHAR(10) PRIMARY KEY,
+    DeptName VARCHAR(50)
+);
+
+CREATE TABLE Students (
+    StudentID INT PRIMARY KEY,
+    StudentName VARCHAR(50),
+    DeptID VARCHAR(10),
+    FOREIGN KEY (DeptID)
+    REFERENCES Departments(DeptID)
+);
+
+INSERT INTO Departments VALUES
+('D01','IT'),
+('D02','Sales');
+
+INSERT INTO Students VALUES
+(1,'Gokul','D01'),
+(2,'Prem','D02');
+
+-- View 3NF Data
+SELECT s.StudentID,
+       s.StudentName,
+       d.DeptName
+FROM Students s
+INNER JOIN Departments d
+ON s.DeptID = d.DeptID;

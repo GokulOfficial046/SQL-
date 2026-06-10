@@ -1,0 +1,122 @@
+/* 1. Create a stored procedure to insert a new employee */
+
+CREATE TABLE employees (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50),
+    department VARCHAR(50),
+    salary DECIMAL(10,2)
+);
+
+DELIMITER //
+
+CREATE PROCEDURE InsertEmployee(
+    IN emp_name VARCHAR(50),
+    IN emp_dept VARCHAR(50),
+    IN emp_salary DECIMAL(10,2)
+)
+BEGIN
+    INSERT INTO employees(name, department, salary)
+    VALUES(emp_name, emp_dept, emp_salary);
+END //
+
+DELIMITER ;
+
+
+/* 2. Create a stored procedure to update salary based on id */
+
+DELIMITER //
+
+CREATE PROCEDURE UpdateSalary(
+    IN emp_id INT,
+    IN new_salary DECIMAL(10,2)
+)
+BEGIN
+    UPDATE employees
+    SET salary = new_salary
+    WHERE id = emp_id;
+END //
+
+DELIMITER ;
+
+
+/* 3. Write a trigger that updates stock when a new order is placed */
+
+CREATE TABLE products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(50),
+    stock INT
+);
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    product_id INT,
+    quantity INT
+);
+
+DELIMITER //
+
+CREATE TRIGGER UpdateStockAfterOrder
+AFTER INSERT ON orders
+FOR EACH ROW
+BEGIN
+    UPDATE products
+    SET stock = stock - NEW.quantity
+    WHERE product_id = NEW.product_id;
+END //
+
+DELIMITER ;
+
+
+/* 4. Write a trigger that prevents deleting the last admin user */
+
+CREATE TABLE users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50),
+    role VARCHAR(20)
+);
+
+DELIMITER //
+
+CREATE TRIGGER PreventLastAdminDelete
+BEFORE DELETE ON users
+FOR EACH ROW
+BEGIN
+    IF OLD.role = 'Admin' AND
+       (SELECT COUNT(*) FROM users WHERE role = 'Admin') = 1 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Cannot delete the last admin user';
+    END IF;
+END //
+
+DELIMITER ;
+
+
+/* 5. Call a stored procedure to fetch employees */
+
+DELIMITER //
+
+CREATE PROCEDURE GetEmployees()
+BEGIN
+    SELECT * FROM employees;
+END //
+
+DELIMITER ;
+
+CALL GetEmployees();
+
+
+/* Example Calls */
+
+CALL InsertEmployee('Gokul', 'IT', 50000);
+
+CALL UpdateSalary(1, 60000);
+
+
+/* 6. Drop a procedure and trigger */
+
+DROP PROCEDURE IF EXISTS InsertEmployee;
+DROP PROCEDURE IF EXISTS UpdateSalary;
+DROP PROCEDURE IF EXISTS GetEmployees;
+
+DROP TRIGGER IF EXISTS UpdateStockAfterOrder;
+DROP TRIGGER IF EXISTS PreventLastAdminDelete;

@@ -1,0 +1,58 @@
+-- 1. Fetch employees whose salary is higher than the department average
+SELECT employee_id, employee_name, salary, department_id
+FROM employees e
+WHERE salary >
+(
+    SELECT AVG(salary)
+    FROM employees
+    WHERE department_id = e.department_id
+);
+
+-- 2. List customers who placed more than 2 orders
+SELECT customer_id, customer_name
+FROM customers
+WHERE customer_id IN
+(
+    SELECT customer_id
+    FROM orders
+    GROUP BY customer_id
+    HAVING COUNT(order_id) > 2
+);
+
+-- 3. Fetch the highest-priced product using a subquery in WHERE
+SELECT *
+FROM products
+WHERE price =
+(
+    SELECT MAX(price)
+    FROM products
+);
+
+-- 4. Subquery that returns the total order value per customer
+SELECT customer_id,
+       (
+           SELECT SUM(quantity * price)
+           FROM orders o
+           WHERE o.customer_id = c.customer_id
+       ) AS total_order_value
+FROM customers c;
+
+-- 5. Correlated subquery to list employees earning more than their manager
+SELECT employee_id, employee_name, salary
+FROM employees e
+WHERE salary >
+(
+    SELECT salary
+    FROM employees m
+    WHERE m.employee_id = e.manager_id
+);
+
+-- 6. Check if a product exists in the orders table using EXISTS
+SELECT product_id, product_name
+FROM products p
+WHERE EXISTS
+(
+    SELECT 1
+    FROM orders o
+    WHERE o.product_id = p.product_id
+);
